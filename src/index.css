@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,89 +6,86 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light Theme Colors */
+    --background: #ffffff;
+    --foreground: #0f172a;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
 
-    --primary: 208 76% 28%; /* Startup blue color */
-    --primary-foreground: 0 0% 100%;
+    --primary: #0f4c81; /* Startup blue */
+    --primary-foreground: #ffffff;
 
-    --secondary: 204 70% 53%; /* Startup blue light color */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: #3498db; /* Startup blue light */
+    --secondary-foreground: #ffffff;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
 
-    --accent: 204 70% 53%;
-    --accent-foreground: 0 0% 100%;
+    --accent: #3498db;
+    --accent-foreground: #ffffff;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #0f172a;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: #fafafa;
+    --sidebar-foreground: #3f3f46;
+    --sidebar-primary: #1a1a1a;
+    --sidebar-primary-foreground: #fafafa;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-accent: #f2f2f2;
+    --sidebar-accent-foreground: #1a1a1a;
 
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-border: #d1d5db;
+    --sidebar-ring: #3b82f6;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: #0f172a;
+    --foreground: #f8fafc;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: #0f172a;
+    --popover-foreground: #f8fafc;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: #f8fafc;
+    --primary-foreground: #1e293b;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: #1e293b;
+    --accent-foreground: #f8fafc;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: #991b1b;
+    --destructive-foreground: #f8fafc;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #cbd5e1;
+
+    --sidebar-background: #1a1a1a;
+    --sidebar-foreground: #f2f2f2;
+    --sidebar-primary: #3b82f6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #292929;
+    --sidebar-accent-foreground: #f2f2f2;
+    --sidebar-border: #292929;
+    --sidebar-ring: #3b82f6;
   }
 }
 
@@ -99,5 +96,13 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+  /* globals.css */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

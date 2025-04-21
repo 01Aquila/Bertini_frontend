@@ -10,6 +10,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { CheckCircle, ThumbsUp, Lock } from "lucide-react";
+import { useRef } from "react";
 
 const featuredProducts = [
   {
@@ -58,18 +59,36 @@ const advantages = [
 
 const testimonials = [
   {
+    id: 1,
     name: "Kamdem Éric",
     testimonial: "Je suis très satisfait de l'application Filmora Premium, elle est vraiment exceptionnelle !",
+  },
+  {
+    id: 2,
+    name: "Marius Kamdem",
+    testimonial: "Je suis très satisfait de l'application Capcut, elle est vraiment exceptionnelle !",
+  },
+  {
+    id: 3,
+    name: "Doriane Tchoumba",
+    testimonial: "Je suis très satisfaite de l'application Netflix, elle est vraiment exceptionnelle !",
+  },
+  {
+    id: 4,
+    name: "Jean Pierre Kamdem",
+    testimonial: "Je suis très satisfait de l'application ChatGPT, elle est vraiment exceptionnelle !",
   }
 ];
 
 const Index = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
       {/* Hero Section */}
-      <Hero 
+      <Hero
         title="Découvrez les solutions innovantes de Startup Conception 3.0"
         subtitle="Des produits conçus pour améliorer votre quotidien"
         ctaText="Découvrez nos services"
@@ -78,15 +97,15 @@ const Index = () => {
 
       {/* Featured Products Section */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Nos produits phares" 
-          subtitle="Des solutions innovantes pour tous vos besoins" 
+        <SectionTitle
+          title="Nos produits phares"
+          subtitle="Des solutions innovantes pour tous vos besoins"
           center
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
           {featuredProducts.map((product, index) => (
-            <ProductCard 
+            <ProductCard
               key={index}
               name={product.name}
               price={product.price}
@@ -111,9 +130,9 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <motion.img 
-                src="https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop" 
-                alt="Bertiny3.0" 
+              <motion.img
+                src="https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"
+                alt="Bertiny3.0"
                 className="rounded-2xl shadow-xl"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -122,7 +141,7 @@ const Index = () => {
               />
             </div>
             <div>
-              <motion.h2 
+              <motion.h2
                 className="text-3xl md:text-4xl font-bold text-gray-900 font-heading mb-4"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -131,7 +150,7 @@ const Index = () => {
               >
                 Bertiny3.0
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-xl text-gray-600 mb-2"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -140,7 +159,7 @@ const Index = () => {
               >
                 <span className="font-semibold">La fraîcheur à portée de main</span>
               </motion.p>
-              <motion.p 
+              <motion.p
                 className="text-gray-600 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -168,15 +187,15 @@ const Index = () => {
 
       {/* Advantages Section */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Nos avantages" 
-          subtitle="Pourquoi choisir Startup Conception 3.0" 
+        <SectionTitle
+          title="Nos avantages"
+          subtitle="Pourquoi choisir Startup Conception 3.0"
           center
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           {advantages.map((advantage, index) => (
-            <FeatureCard 
+            <FeatureCard
               key={index}
               title={advantage.title}
               description={advantage.description}
@@ -192,7 +211,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <motion.h2 
+              <motion.h2
                 className="text-3xl md:text-4xl font-bold font-heading mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -201,7 +220,7 @@ const Index = () => {
               >
                 À propos de nous
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-white/90 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -210,7 +229,7 @@ const Index = () => {
               >
                 Startup Conception 3.0 est une entreprise qui conçoit des solutions innovantes pour améliorer la vie quotidienne, avec des valeurs d'innovation, de qualité et de service client.
               </motion.p>
-              <motion.p 
+              <motion.p
                 className="text-white/90 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -239,10 +258,10 @@ const Index = () => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <img 
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2940&auto=format&fit=crop" 
+              <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2940&auto=format&fit=crop"
                 alt="Notre équipe"
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-cover"
               />
             </motion.div>
           </div>
@@ -251,15 +270,15 @@ const Index = () => {
 
       {/* Testimonials */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Témoignages clients" 
-          subtitle="Ce que nos clients pensent de nos produits" 
+        <SectionTitle
+          title="Témoignages clients"
+          subtitle="Ce que nos clients pensent de nos produits"
           center
         />
-        
-        <div className="grid grid-cols-1 gap-6 mt-12 max-w-2xl mx-auto">
+
+        <div className="grid grid-cols-2 gap-6 mt-12 max-w-2xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <TestimonialCard 
+            <TestimonialCard
               key={index}
               name={testimonial.name}
               testimonial={testimonial.testimonial}
@@ -272,7 +291,7 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-startup-blue to-startup-blue-light text-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <motion.h2 
+          <motion.h2
             className="text-3xl md:text-4xl font-bold font-heading mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -281,7 +300,7 @@ const Index = () => {
           >
             Prêt à découvrir nos services?
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-xl text-white/90 mb-8 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
