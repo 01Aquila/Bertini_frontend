@@ -1,14 +1,31 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const navLinks = [
+    { to: "/", label: "Accueil" },
+    { to: "/products", label: "Produits" },
+    { to: "/bertiny", label: "Bertiny3.0" },
+    { to: "/about", label: "À propos" },
+    { to: "/contact", label: "Contact" },
+    { to: "/faq", label: "FAQ" },
+  ];
+
+  const isActiveLink = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(path);
   };
 
   return (
@@ -22,26 +39,21 @@ export function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-800 hover:text-startup-blue font-medium transition duration-300">
-              Accueil
-            </Link>
-            <Link to="/products" className="text-gray-800 hover:text-startup-blue font-medium transition duration-300">
-              Produits
-            </Link>
-            <Link to="/bertiny" className="text-gray-800 hover:text-startup-blue font-medium transition duration-300">
-              Bertiny3.0
-            </Link>
-            <Link to="/about" className="text-gray-800 hover:text-startup-blue font-medium transition duration-300">
-              À propos
-            </Link>
-            <Link to="/contact" className="text-gray-800 hover:text-startup-blue font-medium transition duration-300">
-              Contact
-            </Link>
-            <Link to="/faq" className="text-gray-800 hover:text-startup-blue font-medium transition duration-300">
-              FAQ
-            </Link>
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`font-medium transition duration-300 ${
+                  isActiveLink(to)
+                    ? "text-startup-blue border-b-2 border-startup-blue"
+                    : "text-gray-800 hover:text-startup-blue"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
-          
+
           <div className="hidden md:block">
             <Button variant="default" asChild className="bg-startup-blue hover:bg-startup-blue/90">
               <Link to="/contact">
@@ -67,48 +79,20 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden pt-4 pb-2 animate-fade-in">
             <div className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                className="px-2 py-1 text-gray-800 hover:text-startup-blue font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Accueil
-              </Link>
-              <Link 
-                to="/products" 
-                className="px-2 py-1 text-gray-800 hover:text-startup-blue font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Produits
-              </Link>
-              <Link 
-                to="/bertiny" 
-                className="px-2 py-1 text-gray-800 hover:text-startup-blue font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Bertiny3.0
-              </Link>
-              <Link 
-                to="/about" 
-                className="px-2 py-1 text-gray-800 hover:text-startup-blue font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                À propos
-              </Link>
-              <Link 
-                to="/contact" 
-                className="px-2 py-1 text-gray-800 hover:text-startup-blue font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-              <Link 
-                to="/faq" 
-                className="px-2 py-1 text-gray-800 hover:text-startup-blue font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                FAQ
-              </Link>
+              {navLinks.map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`px-2 py-1 font-medium ${
+                    isActiveLink(to)
+                      ? "text-startup-blue border-b-2 border-startup-blue"
+                      : "text-gray-800 hover:text-startup-blue"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {label}
+                </Link>
+              ))}
               <Button variant="default" asChild className="w-full bg-startup-blue hover:bg-startup-blue/90">
                 <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
                   Nous contacter
