@@ -13,30 +13,30 @@ import { CheckCircle, ThumbsUp, Lock } from "lucide-react";
 import { useRef } from "react";
 
 const featuredProducts = [
-  {
-    name: "Filmora Premium",
-    price: "5 000",
-    description: "Application de divertissement premium offrant une expérience utilisateur exceptionnelle.",
-    imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2940&auto=format&fit=crop"
-  },
-  {
-    name: "Capcut",
-    price: "5 000",
-    description: "Application innovante pour la productivité et la gestion de projet.",
-    imageUrl: "https://images.unsplash.com/photo-1626544827763-d516dce335e2?q=80&w=2787&auto=format&fit=crop"
-  },
-  {
-    name: "Netflix",
-    price: "5 000",
-    description: "Service de streaming vidéo premium.",
-    imageUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=2149&auto=format&fit=crop"
-  },
-  {
-    name: "ChatGPT",
-    price: "5 000",
-    description: "Outil de conversation basé sur l'IA.",
-    imageUrl: "https://images.unsplash.com/photo-1677442135136-760c813170a5?q=80&w=2932&auto=format&fit=crop"
-  }
+  // {
+  //   name: "Filmora Premium",
+  //   price: "5 000",
+  //   description: "Application de divertissement premium offrant une expérience utilisateur exceptionnelle.",
+  //   imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2940&auto=format&fit=crop"
+  // },
+  // {
+  //   name: "Capcut",
+  //   price: "5 000",
+  //   description: "Application innovante pour la productivité et la gestion de projet.",
+  //   imageUrl: "https://images.unsplash.com/photo-1626544827763-d516dce335e2?q=80&w=2787&auto=format&fit=crop"
+  // },
+  // {
+  //   name: "Netflix",
+  //   price: "5 000",
+  //   description: "Service de streaming vidéo premium.",
+  //   imageUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=2149&auto=format&fit=crop"
+  // },
+  // {
+  //   name: "ChatGPT",
+  //   price: "5 000",
+  //   description: "Outil de conversation basé sur l'IA.",
+  //   imageUrl: "https://images.unsplash.com/photo-1677442135136-760c813170a5?q=80&w=2932&auto=format&fit=crop"
+  // }
 ];
 
 const advantages = [
