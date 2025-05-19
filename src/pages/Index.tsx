@@ -89,7 +89,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <Hero
-        title="Découvrez les solutions innovantes de Startup Conception 3"
+        title="Découvrez les solutions innovantes de Startup Conception"
         subtitle="Des produits conçus pour améliorer votre quotidien"
         ctaText="Découvrez nos services"
         imageUrl="https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2620&auto=format&fit=crop"
