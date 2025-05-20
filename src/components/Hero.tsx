@@ -16,12 +16,12 @@ export function Hero({
   subtitle, 
   imageUrl = "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2620&auto=format&fit=crop",
   ctaText = "Découvrez nos services",
-  ctaLink = "/products" 
+  ctaLink = "/products"
 }: HeroProps) {
   return (
     <div className="relative overflow-hidden bg-white">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 z-0" 
         style={{
           backgroundImage: `url(${imageUrl})`,
