@@ -12,21 +12,23 @@ import axios from "axios";
 
 // Define interface for Bertiny page data
 interface BertinyPageData {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  price: string;
-  images: {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  price?: string;
+  images?: {
     id: string;
     image: {
-      url: string;
-      alt: string;
       id: string;
+      url: string;
+      alt?: string;
+      thumbnailURL?: string | null;
     };
   }[];
-  createdAt: string;
-  updatedAt: string;
+  features?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Define fallback data to use if API fails
@@ -62,15 +64,16 @@ const Bertiny = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<BertinyPageData[]>("https://bertini-backend.vercel.app/api/bertini-page", {
+        const response = await axios.get("https://bertini-backend.vercel.app/api/bertini-page", {
           headers: {
             "Content-Type": "application/json",
           },
         });
         const data = response.data;
+        console.log("Bertiny data:", data);
 
-        if (data && Array.isArray(data) && data.length > 0) {
-          setBertinyData(data[0]);
+        if (data?.docs && Array.isArray(data.docs) && data.docs.length > 0) {
+          setBertinyData(data.docs[0]);
         } else {
           console.error("Invalid bertini-page data format", data);
           setBertinyData(fallbackData);

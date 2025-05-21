@@ -26,13 +26,22 @@ interface Product {
 
 // Define type for Bertiny Special
 interface BertinySpecial {
-  _id: string;
-  name: string;
-  description: string;
+  id?: string;
+  title?: string;
   subtitle?: string;
+  description?: string;
+  price?: string;
   images?: {
-    url: string;
+    id: string;
+    image: {
+      id: string;
+      url: string;
+      alt?: string;
+      thumbnailURL?: string | null;
+    };
   }[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Fallback products in case API fails
@@ -305,8 +314,10 @@ const Index = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <motion.img
-                  src={`https://bertini-backend.vercel.app${bertinySpecial[0].images[0].url}`}
-                  alt={bertinySpecial[0]?.name || "Bertiny3.0"}
+                  src={bertinySpecial[0]?.images?.[0]?.image?.url 
+                    ? `https://bertini-backend.vercel.app${bertinySpecial[0].images[0].image.url}` 
+                    : "/images/placeholder.png"}
+                  alt={bertinySpecial[0]?.title || "Bertiny3.0"}
                   className="rounded-2xl shadow-xl w-full h-auto"
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -322,7 +333,7 @@ const Index = () => {
                   transition={{ duration: 0.5 }}
                   viewport={{ once: true }}
                 >
-                  {bertinySpecial[0]?.name || "Bertiny3.0"}
+                  {bertinySpecial[0]?.title || "Bertiny3.0"}
                 </motion.h2>
                 <motion.p
                   className="text-xl text-gray-600 mb-2"
