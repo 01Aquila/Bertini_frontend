@@ -136,7 +136,7 @@ const Index = () => {
     setLoadingApplications(true);
     setError(null);
     try {
-      const response = await fetch("c/api/applications");
+      const response = await fetch("https://bertini-backend.vercel.app/api/applications");
       const data = await response.json();
 
       if (data?.docs && Array.isArray(data.docs)) {
