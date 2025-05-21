@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import { ScrollToTop } from "./components/ScrollToTop";
 import Contact from "./pages/Contact";
 import ProductOrder from "./pages/ProductOrder";
+import Réparateur from "./pages/Réparateur";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/bertiny" element={<Bertiny />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/réparateur3.0" element={<Réparateur />} />
           <Route path="/product-order/:productName" element={<ProductOrder />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

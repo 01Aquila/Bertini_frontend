@@ -97,11 +97,11 @@ const Bertiny = () => {
 
       {/* Product Description */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        {error && (
+        {/* {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-8 text-center">
             {error}
           </div>
-        )}
+        )} */}
 
         {loading ? (
           // Loading state with skeleton UI

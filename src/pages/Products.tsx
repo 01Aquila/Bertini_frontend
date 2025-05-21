@@ -192,11 +192,11 @@ const Products = () => {
           subtitle="Solutions logicielles pour améliorer votre quotidien"
         />
         
-        {applicationsError && (
+        {/* {applicationsError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6 text-center">
             {applicationsError}
           </div>
-        )}
+        )} */}
         
         {loadingApplications ? (
           // Loading state - show placeholder cards
@@ -256,11 +256,11 @@ const Products = () => {
             subtitle="Une large gamme pour tous les budgets et besoins"
           />
           
-          {smartphonesError && (
+          {/* {smartphonesError && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6 text-center">
               {smartphonesError}
             </div>
-          )}
+          )} */}
           
           {loadingSmartphones ? (
             // Loading state - show placeholder cards

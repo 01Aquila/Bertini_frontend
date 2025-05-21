@@ -15,6 +15,7 @@ export function Navbar() {
     { to: "/", label: "Accueil" },
     { to: "/products", label: "Produits" },
     { to: "/bertiny", label: "Bertiny3.0" },
+    { to: "/réparateur3.0", label: "Réparateur3.0" },
     { to: "/about", label: "À propos" }
   ];
 
