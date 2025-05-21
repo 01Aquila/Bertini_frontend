@@ -272,6 +272,8 @@ const Index = () => {
             [...applications, ...smartphones].map((product, index) => (
               <ProductCard
                 key={product._id || `product-${index}`}
+                _id={product._id}
+                productType={index < applications.length ? "application" : "smartphone"}
                 name={product.name || "Produit sans nom"}
                 price={product.price?.toString() || "Prix non disponible"}
                 description={

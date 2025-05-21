@@ -226,6 +226,8 @@ const Products = () => {
               {applications.length > 0 ? applications.map((app, index) => (
                 <ProductCard
                   key={app._id || index}
+                  _id={app._id}
+                  productType="application"
                   name={app.name || "Application sans nom"}
                   price={app.price?.toString() || "Prix non disponible"}
                   description={app.description
@@ -290,6 +292,8 @@ const Products = () => {
                 {smartphones.length > 0 ? smartphones.map((phone, index) => (
                   <ProductCard
                     key={phone._id || index}
+                    _id={phone._id}
+                    productType="smartphone"
                     name={phone.name || "Smartphone sans nom"}
                     price={phone.price?.toString() || "Prix non disponible"}
                     description={phone.description

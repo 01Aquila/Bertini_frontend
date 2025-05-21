@@ -9,6 +9,8 @@ interface ProductCardProps {
   imageUrl?: string;
   link?: string;
   index?: number;
+  _id?: string;
+  productType?: "smartphone" | "application";
 }
 
 // Convert product name to url-safe string for use in URLs
@@ -23,7 +25,9 @@ export function ProductCard({
   price,
   description,
   imageUrl = "https://images.unsplash.com/photo-1586892478025-2b5472316991?q=80&w=1974&auto=format&fit=crop",
-  index = 0
+  index = 0,
+  _id,
+  productType,
 }: ProductCardProps) {
   return (
     <motion.div
@@ -53,7 +57,7 @@ export function ProductCard({
           asChild
           className="bg-startup-blue hover:bg-startup-blue/90 w-full mt-auto"
         >
-          <Link to={`/product-order/${formatProductName(name)}`}>
+          <Link to={_id ? `/product-order/${_id}/${productType || ''}` : `/product-order/${formatProductName(name)}`}>
             Commander
           </Link>
         </Button>
