@@ -30,7 +30,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-startup-blue font-heading">S.C
+            <span className="text-2xl font-bold text-startup-blue font-heading">S. Conception
             </span>
             <span className="font-heading text-lg text-startup-black"> 3.0</span>
           </Link>
