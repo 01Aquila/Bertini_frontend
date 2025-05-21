@@ -23,6 +23,17 @@ interface Product {
   };
 }
 
+// Define type for Bertiny Special
+interface BertinySpecial {
+  _id: string;
+  name: string;
+  tagline?: string;
+  description: string;
+  images?: {
+    url: string;
+  }[];
+}
+
 // Fallback products in case API fails
 const fallbackProducts: {
   applications: Product[];
@@ -118,7 +129,7 @@ const Index = () => {
   const [loadingBertinySpecial, setLoadingBertinySpecial] = useState(true);
   const [applications, setApplications] = useState<Product[]>([]);
   const [smartphones, setSmartphones] = useState<Product[]>([]);
-  const [bertinySpecial, setBertinySpecial] = useState([]);
+  const [bertinySpecial, setBertinySpecial] = useState<BertinySpecial[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const fetchApplications = async () => {
@@ -262,60 +273,132 @@ const Index = () => {
       {/* Bertiny Special Section */}
       <section className="py-16 bg-startup-blue/5">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <motion.img
-                src="https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"
-                alt="Bertiny3.0"
-                className="rounded-2xl shadow-xl"
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-              />
+          {loadingBertinySpecial ? (
+            // Loading state for Bertiny Special
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="h-64 md:h-80 bg-gray-200 rounded-2xl animate-pulse"></div>
+              <div>
+                <div className="h-8 bg-gray-200 rounded w-1/2 mb-4 animate-pulse"></div>
+                <div className="h-6 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
+                <div className="h-24 bg-gray-200 rounded w-full mb-6 animate-pulse"></div>
+                <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+              </div>
             </div>
-            <div>
-              <motion.h2
-                className="text-3xl md:text-4xl font-bold text-gray-900 font-heading mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                Bertiny3.0
-              </motion.h2>
-              <motion.p
-                className="text-xl text-gray-600 mb-2"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                viewport={{ once: true }}
-              >
-                <span className="font-semibold">La fraîcheur à portée de main</span>
-              </motion.p>
-              <motion.p
-                className="text-gray-600 mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                Machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Distribution rapide, hygiénique et autonome.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                viewport={{ once: true }}
-              >
-                <Button asChild className="bg-startup-blue hover:bg-startup-blue/90">
-                  <Link to="/bertiny">
-                    En savoir plus
-                  </Link>
-                </Button>
-              </motion.div>
+          ) : bertinySpecial.length > 0 ? (
+            // Display Bertiny Special data
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <motion.img
+                  src={bertinySpecial[0]?.images?.[0].url 
+                    ? `https://bertini-backend.vercel.app${bertinySpecial[0].images[0].url}` 
+                    : "https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"}
+                  alt={bertinySpecial[0]?.name || "Bertiny3.0"}
+                  className="rounded-2xl shadow-xl w-full h-auto"
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                />
+              </div>
+              <div>
+                <motion.h2
+                  className="text-3xl md:text-4xl font-bold text-gray-900 font-heading mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  {bertinySpecial[0]?.name || "Bertiny3.0"}
+                </motion.h2>
+                <motion.p
+                  className="text-xl text-gray-600 mb-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <span className="font-semibold">{bertinySpecial[0]?.tagline || "La fraîcheur à portée de main"}</span>
+                </motion.p>
+                <motion.p
+                  className="text-gray-600 mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  {bertinySpecial[0]?.description || "Machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Distribution rapide, hygiénique et autonome."}
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Button asChild className="bg-startup-blue hover:bg-startup-blue/90">
+                    <Link to="/bertiny">
+                      En savoir plus
+                    </Link>
+                  </Button>
+                </motion.div>
+              </div>
             </div>
-          </div>
+          ) : (
+            // Fallback if no data is available
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <motion.img
+                  src="https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"
+                  alt="Bertiny3.0"
+                  className="rounded-2xl shadow-xl"
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                />
+              </div>
+              <div>
+                <motion.h2
+                  className="text-3xl md:text-4xl font-bold text-gray-900 font-heading mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  Bertiny3.0
+                </motion.h2>
+                <motion.p
+                  className="text-xl text-gray-600 mb-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <span className="font-semibold">La fraîcheur à portée de main</span>
+                </motion.p>
+                <motion.p
+                  className="text-gray-600 mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  Machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Distribution rapide, hygiénique et autonome.
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <Button asChild className="bg-startup-blue hover:bg-startup-blue/90">
+                    <Link to="/bertiny">
+                      En savoir plus
+                    </Link>
+                  </Button>
+                </motion.div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
