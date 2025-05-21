@@ -277,9 +277,7 @@ const Index = () => {
                 name={product.name || "Produit sans nom"}
                 price={product.price?.toString() || "Prix non disponible"}
                 description={
-                  product.description
-                    ? `${product.description.slice(0, 20)}${product.description.length > 20 ? "..." : ""}`
-                    : "Aucune description disponible"
+                  product.description || "Aucune description disponible"
                 }
                 imageUrl={product?.image?.url ? `https://bertini-backend.vercel.app${product?.image?.url}` : '/images/placeholder.png'}
                 index={index}

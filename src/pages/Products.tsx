@@ -230,10 +230,7 @@ const Products = () => {
                   productType="application"
                   name={app.name || "Application sans nom"}
                   price={app.price?.toString() || "Prix non disponible"}
-                  description={app.description
-                    ? `${app.description.slice(0, 50)}${app.description.length > 50 ? "..." : ""}`
-                    : "Aucune description disponible"
-                  }
+                  description={app.description || "Aucune description disponible"}
                   imageUrl={app.image?.url ? `https://bertini-backend.vercel.app${app.image.url}` : "https://images.unsplash.com/photo-1586892478025-2b5472316991?q=80&w=1974&auto=format&fit=crop"}
                   index={index}
                 />
@@ -296,10 +293,7 @@ const Products = () => {
                     productType="smartphone"
                     name={phone.name || "Smartphone sans nom"}
                     price={phone.price?.toString() || "Prix non disponible"}
-                    description={phone.description
-                      ? `${phone.description.slice(0, 70)}${phone.description.length > 70 ? "..." : ""}`
-                      : "Aucune description disponible"
-                    }
+                    description={phone.description || "Aucune description disponible"}
                     imageUrl={phone.image?.url ? `https://bertini-backend.vercel.app${phone.image.url}` : "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=2944&auto=format&fit=crop"}
                     index={index}
                   />

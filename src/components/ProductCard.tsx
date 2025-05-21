@@ -38,7 +38,7 @@ export function ProductCard({
       _id: _id || `product-${name}`,
       name,
       price,
-      description,
+      description, // Pass the complete description
       image: { url: imageUrl.includes("bertini-backend.vercel.app") ? imageUrl.replace("https://bertini-backend.vercel.app", "") : null },
       productType
     };
@@ -69,7 +69,11 @@ export function ProductCard({
         <p className="text-startup-blue font-semibold mb-3">
           {typeof price === "number" ? `${price.toLocaleString()} FCFA` : price + " FCFA"}
         </p>
-        <p className="text-gray-600 mb-4 text-sm flex-1">{description}</p>
+        <p className="text-gray-600 mb-4 text-sm flex-1">
+          {description && description.length > 70 
+            ? `${description.slice(0, 70)}...` 
+            : description}
+        </p>
         <Button
           className="bg-startup-blue hover:bg-startup-blue/90 w-full mt-auto"
           onClick={handleOrderClick}
