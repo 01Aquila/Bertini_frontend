@@ -62,7 +62,11 @@ const Bertiny = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<BertinyPageData[]>("https://bertini-backend.vercel.app/api/bertini-page");
+        const response = await axios.get<BertinyPageData[]>("https://bertini-backend.vercel.app/api/bertini-page", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = response.data;
 
         if (data && Array.isArray(data) && data.length > 0) {

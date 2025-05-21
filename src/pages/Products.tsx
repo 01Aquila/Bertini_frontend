@@ -79,7 +79,11 @@ const Products = () => {
     setLoadingApplications(true);
     setApplicationsError(null);
     try {
-      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`);
+      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.data?.docs && Array.isArray(response.data.docs)) {
         setApplications(response.data.docs);
@@ -103,7 +107,11 @@ const Products = () => {
     setLoadingSmartphones(true);
     setSmartphonesError(null);
     try {
-      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`);
+      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.data?.docs && Array.isArray(response.data.docs)) {
         setSmartphones(response.data.docs);
@@ -176,27 +184,27 @@ const Products = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <Hero 
+      <Hero
         title="Notre catalogue de produits"
         subtitle="Découvrez notre sélection de smartphones et applications"
         imageUrl="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=2940&auto=format&fit=crop"
         ctaText="Contactez-nous"
-        ctaLink="/contact" 
+        ctaLink="/contact"
       />
 
       {/* Applications Section */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        <SectionTitle 
-          title="Nos applications" 
+        <SectionTitle
+          title="Nos applications"
           subtitle="Solutions logicielles pour améliorer votre quotidien"
         />
-        
+
         {/* {applicationsError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6 text-center">
             {applicationsError}
           </div>
         )} */}
-        
+
         {loadingApplications ? (
           // Loading state - show placeholder cards
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
@@ -216,12 +224,12 @@ const Products = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
               {applications.length > 0 ? applications.map((app, index) => (
-                <ProductCard 
+                <ProductCard
                   key={app._id || index}
                   name={app.name || "Application sans nom"}
                   price={app.price?.toString() || "Prix non disponible"}
-                  description={app.description 
-                    ? `${app.description.slice(0, 50)}${app.description.length > 50 ? "..." : ""}` 
+                  description={app.description
+                    ? `${app.description.slice(0, 50)}${app.description.length > 50 ? "..." : ""}`
                     : "Aucune description disponible"
                   }
                   imageUrl={app.image?.url ? `https://bertini-backend.vercel.app${app.image.url}` : "https://images.unsplash.com/photo-1586892478025-2b5472316991?q=80&w=1974&auto=format&fit=crop"}
@@ -233,13 +241,13 @@ const Products = () => {
                 </div>
               )}
             </div>
-            
+
             {applicationsPagination && applicationsPagination.totalPages > 1 && (
               renderPagination(
-                applicationsPage, 
-                applicationsPagination.totalPages, 
-                applicationsPagination.hasPrevPage, 
-                applicationsPagination.hasNextPage, 
+                applicationsPage,
+                applicationsPagination.totalPages,
+                applicationsPagination.hasPrevPage,
+                applicationsPagination.hasNextPage,
                 handleApplicationsPageChange
               )
             )}
@@ -250,17 +258,17 @@ const Products = () => {
       {/* Smartphones Section */}
       <section className="py-16 bg-startup-blue/5 px-4">
         <div className="max-w-7xl mx-auto">
-          <SectionTitle 
-            title="Nos smartphones" 
+          <SectionTitle
+            title="Nos smartphones"
             subtitle="Une large gamme pour tous les budgets et besoins"
           />
-          
+
           {/* {smartphonesError && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6 text-center">
               {smartphonesError}
             </div>
           )} */}
-          
+
           {loadingSmartphones ? (
             // Loading state - show placeholder cards
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
@@ -280,12 +288,12 @@ const Products = () => {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
                 {smartphones.length > 0 ? smartphones.map((phone, index) => (
-                  <ProductCard 
+                  <ProductCard
                     key={phone._id || index}
                     name={phone.name || "Smartphone sans nom"}
                     price={phone.price?.toString() || "Prix non disponible"}
-                    description={phone.description 
-                      ? `${phone.description.slice(0, 70)}${phone.description.length > 70 ? "..." : ""}` 
+                    description={phone.description
+                      ? `${phone.description.slice(0, 70)}${phone.description.length > 70 ? "..." : ""}`
                       : "Aucune description disponible"
                     }
                     imageUrl={phone.image?.url ? `https://bertini-backend.vercel.app${phone.image.url}` : "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=2944&auto=format&fit=crop"}
@@ -297,13 +305,13 @@ const Products = () => {
                   </div>
                 )}
               </div>
-              
+
               {smartphonesPagination && smartphonesPagination.totalPages > 1 && (
                 renderPagination(
-                  smartphonesPage, 
-                  smartphonesPagination.totalPages, 
-                  smartphonesPagination.hasPrevPage, 
-                  smartphonesPagination.hasNextPage, 
+                  smartphonesPage,
+                  smartphonesPagination.totalPages,
+                  smartphonesPagination.hasPrevPage,
+                  smartphonesPagination.hasNextPage,
                   handleSmartphonesPageChange
                 )
               )}

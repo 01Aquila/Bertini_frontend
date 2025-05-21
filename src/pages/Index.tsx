@@ -137,7 +137,11 @@ const Index = () => {
     setLoadingApplications(true);
     setError(null);
     try {
-      const response = await axios.get("https://bertini-backend.vercel.app/api/applications");
+      const response = await axios.get("https://bertini-backend.vercel.app/api/applications", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = response.data;
       console.log("Applications data:", data.docs);
 
@@ -161,7 +165,11 @@ const Index = () => {
     setLoadingSmartphones(true);
     setError(null);
     try {
-      const response = await axios.get("https://bertini-backend.vercel.app/api/smartphones");
+      const response = await axios.get("https://bertini-backend.vercel.app/api/smartphones", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = response.data;
       console.log("Smartphones data:", data.docs);
 
@@ -185,7 +193,11 @@ const Index = () => {
     setLoadingBertinySpecial(true);
     setError(null);
     try {
-      const response = await axios.get("https://bertini-backend.vercel.app/api/bertini-page");
+      const response = await axios.get("https://bertini-backend.vercel.app/api/bertini-page", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = response.data;
       console.log("Bertiny Special data:", data.docs);
 
