@@ -89,8 +89,8 @@ const Index = () => {
 
       {/* Hero Section */}
       <Hero
-        title="Start-Up Conception 3.0"
-        subtitle="La Start-Up Conception 3.0 est une entreprise innovante qui conçoit, produit et commercialise des distributeurs automatiques de boissons. Elle est à l'avant-garde de la technologie et propose des solutions modernes pour répondre aux besoins des consommateurs."
+        title="Découvrez les solutions innovantes de Startup Conception 3.0"
+        subtitle="Des produits conçus pour améliorer votre quotidien"
         ctaText="Découvrez nos services"
         imageUrl="https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2620&auto=format&fit=crop"
       />
