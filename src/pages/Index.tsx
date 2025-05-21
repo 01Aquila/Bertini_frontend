@@ -27,8 +27,8 @@ interface Product {
 interface BertinySpecial {
   _id: string;
   name: string;
-  tagline?: string;
   description: string;
+  subtitle?: string;
   images?: {
     url: string;
   }[];
@@ -317,7 +317,7 @@ const Index = () => {
                   transition={{ duration: 0.5, delay: 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <span className="font-semibold">{bertinySpecial[0]?.tagline || "La fraîcheur à portée de main"}</span>
+                  <span className="font-semibold">{bertinySpecial[0]?.subtitle || "La fraîcheur à portée de main"}</span>
                 </motion.p>
                 <motion.p
                   className="text-gray-600 mb-6"
@@ -326,7 +326,9 @@ const Index = () => {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   viewport={{ once: true }}
                 >
-                  {bertinySpecial[0]?.description || "Machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Distribution rapide, hygiénique et autonome."}
+                  {bertinySpecial[0]?.description
+                    ? `${bertinySpecial[0].description.slice(0, 150)}${bertinySpecial[0].description.length > 150 ? "..." : ""}`
+                    : "Machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Distribution rapide, hygiénique et autonome."}
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
