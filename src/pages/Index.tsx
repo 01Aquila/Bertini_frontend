@@ -10,34 +10,65 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { CheckCircle, ThumbsUp, Lock } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const featuredProducts = [
-  {
-    name: "Filmora Premium",
-    price: "5 000",
-    description: "Application de divertissement premium offrant une expérience utilisateur exceptionnelle.",
-    imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2940&auto=format&fit=crop"
-  },
-  {
-    name: "Capcut",
-    price: "5 000",
-    description: "Application innovante pour la productivité et la gestion de projet.",
-    imageUrl: "https://images.unsplash.com/photo-1626544827763-d516dce335e2?q=80&w=2787&auto=format&fit=crop"
-  },
-  {
-    name: "Netflix",
-    price: "5 000",
-    description: "Service de streaming vidéo premium.",
-    imageUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=2149&auto=format&fit=crop"
-  },
-  {
-    name: "ChatGPT",
-    price: "5 000",
-    description: "Outil de conversation basé sur l'IA.",
-    imageUrl: "https://images.unsplash.com/photo-1677442135136-760c813170a5?q=80&w=2932&auto=format&fit=crop"
-  }
-];
+// Define proper types for our products
+interface Product {
+  _id: string;
+  name: string;
+  price: string | number;
+  description: string;
+  image: {
+    url: string;
+  };
+}
+
+// Fallback products in case API fails
+const fallbackProducts: {
+  applications: Product[];
+  smartphones: Product[];
+} = {
+  applications: [
+    {
+      _id: "app1",
+      name: "Filmora Premium",
+      price: "5 000",
+      description: "Application de divertissement premium offrant une expérience utilisateur exceptionnelle.",
+      image: {
+        url: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2940&auto=format&fit=crop"
+      }
+    },
+    {
+      _id: "app2",
+      name: "Capcut",
+      price: "5 000",
+      description: "Application innovante pour la productivité et la gestion de projet.",
+      image: {
+        url: "https://images.unsplash.com/photo-1626544827763-d516dce335e2?q=80&w=2787&auto=format&fit=crop"
+      }
+    }
+  ],
+  smartphones: [
+    {
+      _id: "phone1",
+      name: "iPhone 15 Pro",
+      price: "750 000",
+      description: "Smartphone haut de gamme avec des fonctionnalités avancées.",
+      image: {
+        url: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=2149&auto=format&fit=crop"
+      }
+    },
+    {
+      _id: "phone2",
+      name: "Galaxy S23 Ultra",
+      price: "650 000",
+      description: "Smartphone Android premium avec un stylet et un appareil photo de qualité professionnelle.",
+      image: {
+        url: "https://images.unsplash.com/photo-1677442135136-760c813170a5?q=80&w=2932&auto=format&fit=crop"
+      }
+    }
+  ]
+};
 
 const advantages = [
   {
@@ -82,7 +113,83 @@ const testimonials = [
 
 const Index = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  const [loadingApplications, setLoadingApplications] = useState(true);
+  const [loadingSmartphones, setLoadingSmartphones] = useState(true);
+  const [loadingBertinySpecial, setLoadingBertinySpecial] = useState(true);
+  const [applications, setApplications] = useState<Product[]>([]);
+  const [smartphones, setSmartphones] = useState<Product[]>([]);
+  const [bertinySpecial, setBertinySpecial] = useState([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchApplications = async () => {
+    setLoadingApplications(true);
+    setError(null);
+    try {
+      const response = await fetch("c/api/applications");
+      const data = await response.json();
+
+      if (data?.docs && Array.isArray(data.docs)) {
+        setApplications(data.docs.slice(0, 2)); // Only get 2 applications
+      } else {
+        console.error("Invalid applications data format", data);
+        // Use fallback data
+        setApplications(fallbackProducts.applications);
+      }
+    } catch (error) {
+      console.error("Application fetch error:", error);
+      // Use fallback data on error
+      setApplications(fallbackProducts.applications);
+    } finally {
+      setLoadingApplications(false);
+    }
+  };
+
+  const fetchSmartphones = async () => {
+    setLoadingSmartphones(true);
+    setError(null);
+    try {
+      const response = await fetch("https://bertini-backend.vercel.app/api/smartphones");
+      const data = await response.json();
+
+      if (data?.docs && Array.isArray(data.docs)) {
+        setSmartphones(data.docs.slice(0, 2)); // Only get 2 smartphones
+      } else {
+        console.error("Invalid smartphones data format", data);
+        // Use fallback data
+        setSmartphones(fallbackProducts.smartphones);
+      }
+    } catch (error) {
+      console.error("Smartphone fetch error:", error);
+      // Use fallback data on error
+      setSmartphones(fallbackProducts.smartphones);
+    } finally {
+      setLoadingSmartphones(false);
+    }
+  };
+
+  const fetchBertinySpecial = async () => {
+    setLoadingBertinySpecial(true);
+    setError(null);
+    try {
+      const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page");
+      const data = await response.json();
+
+      if (data?.docs && Array.isArray(data.docs)) {
+        setBertinySpecial(data.docs.slice(0, 1)); // Only get 1 Bertiny Special
+      }
+    } catch (error) {
+      console.error("Bertiny Special fetch error:", error);
+    } finally {
+      setLoadingBertinySpecial(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchApplications();
+    fetchSmartphones();
+    fetchBertinySpecial();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -103,17 +210,44 @@ const Index = () => {
           center
         />
 
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-8 mb-4 text-center">
+            {error}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-          {featuredProducts.map((product, index) => (
-            <ProductCard
-              key={index}
-              name={product.name}
-              price={product.price}
-              description={product.description}
-              imageUrl={product.imageUrl}
-              index={index}
-            />
-          ))}
+          {(loadingApplications || loadingSmartphones) ? (
+            // Loading state - show 4 placeholder cards
+            Array(4).fill(0).map((_, index) => (
+              <div key={`loading-${index}`} className="bg-white rounded-lg overflow-hidden shadow-md">
+                <div className="h-48 w-full bg-gray-200 animate-pulse" />
+                <div className="p-5">
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-2 animate-pulse" />
+                  <div className="h-4 bg-gray-200 rounded w-1/4 mb-3 animate-pulse" />
+                  <div className="h-4 bg-gray-200 rounded w-full mb-2 animate-pulse" />
+                  <div className="h-4 bg-gray-200 rounded w-full mb-2 animate-pulse" />
+                  <div className="h-10 bg-gray-200 rounded w-full mt-4 animate-pulse" />
+                </div>
+              </div>
+            ))
+          ) : (
+            // Combine applications and smartphones
+            [...applications, ...smartphones].map((product, index) => (
+              <ProductCard
+                key={product._id || `product-${index}`}
+                name={product.name || "Produit sans nom"}
+                price={product.price?.toString() || "Prix non disponible"}
+                description={
+                  product.description
+                    ? `${product.description.slice(0, 20)}${product.description.length > 20 ? "..." : ""}`
+                    : "Aucune description disponible"
+                }
+                imageUrl={`https://bertini-backend.vercel.app${product?.image?.url}`}
+                index={index}
+              />
+            ))
+          )}
         </div>
 
         <div className="mt-12 text-center">
