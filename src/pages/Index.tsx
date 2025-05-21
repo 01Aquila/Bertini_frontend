@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { CheckCircle, ThumbsUp, Lock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 // Define proper types for our products
 interface Product {
@@ -136,10 +137,8 @@ const Index = () => {
     setLoadingApplications(true);
     setError(null);
     try {
-      const response = await fetch("https://bertini-backend.vercel.app/api/applications", {
-        method: "GET",
-      });
-      const data = await response.json();
+      const response = await axios.get("https://bertini-backend.vercel.app/api/applications");
+      const data = response.data;
       console.log("Applications data:", data.docs);
 
       if (data?.docs && Array.isArray(data.docs)) {
@@ -162,10 +161,8 @@ const Index = () => {
     setLoadingSmartphones(true);
     setError(null);
     try {
-      const response = await fetch("https://bertini-backend.vercel.app/api/smartphones", {
-        method: "GET",
-      });
-      const data = await response.json();
+      const response = await axios.get("https://bertini-backend.vercel.app/api/smartphones");
+      const data = response.data;
       console.log("Smartphones data:", data.docs);
 
       if (data?.docs && Array.isArray(data.docs)) {
@@ -188,10 +185,8 @@ const Index = () => {
     setLoadingBertinySpecial(true);
     setError(null);
     try {
-      const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page", {
-        method: "GET",
-      });
-      const data = await response.json();
+      const response = await axios.get("https://bertini-backend.vercel.app/api/bertini-page");
+      const data = response.data;
       console.log("Bertiny Special data:", data.docs);
 
       if (data?.docs && Array.isArray(data.docs)) {
