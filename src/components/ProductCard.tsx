@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   name: string;
@@ -29,6 +29,23 @@ export function ProductCard({
   _id,
   productType,
 }: ProductCardProps) {
+  const navigate = useNavigate();
+  
+  // Handle product order navigation with product data
+  const handleOrderClick = () => {
+    // Create a product object with all necessary data
+    const product = {
+      _id: _id || `product-${name}`,
+      name,
+      price,
+      description,
+      image: { url: imageUrl.includes("bertini-backend.vercel.app") ? imageUrl.replace("https://bertini-backend.vercel.app", "") : null },
+      productType
+    };
+    
+    // Navigate to product order page with product data as state
+    navigate(`/product-order/${_id || formatProductName(name)}`, { state: { product } });
+  };
   return (
     <motion.div
       className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col"
@@ -54,12 +71,10 @@ export function ProductCard({
         </p>
         <p className="text-gray-600 mb-4 text-sm flex-1">{description}</p>
         <Button
-          asChild
           className="bg-startup-blue hover:bg-startup-blue/90 w-full mt-auto"
+          onClick={handleOrderClick}
         >
-          <Link to={_id ? `/product-order/${_id}/${productType || ''}` : `/product-order/${formatProductName(name)}`}>
-            Commander
-          </Link>
+          Commander
         </Button>
       </div>
     </motion.div>
