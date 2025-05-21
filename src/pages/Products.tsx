@@ -78,7 +78,9 @@ const Products = () => {
     setLoadingApplications(true);
     setApplicationsError(null);
     try {
-      const response = await fetch(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`);
+      const response = await fetch(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`, {
+        method: "GET",
+      });
       const data: PaginationResponse = await response.json();
 
       if (data?.docs && Array.isArray(data.docs)) {
@@ -103,7 +105,9 @@ const Products = () => {
     setLoadingSmartphones(true);
     setSmartphonesError(null);
     try {
-      const response = await fetch(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`);
+      const response = await fetch(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`, {
+        method: "GET",
+      });
       const data: PaginationResponse = await response.json();
 
       if (data?.docs && Array.isArray(data.docs)) {

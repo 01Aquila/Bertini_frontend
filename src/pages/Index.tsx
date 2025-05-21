@@ -136,7 +136,9 @@ const Index = () => {
     setLoadingApplications(true);
     setError(null);
     try {
-      const response = await fetch("https://bertini-backend.vercel.app/api/applications");
+      const response = await fetch("https://bertini-backend.vercel.app/api/applications", {
+        method: "GET",
+      });
       const data = await response.json();
 
       if (data?.docs && Array.isArray(data.docs)) {
@@ -159,7 +161,9 @@ const Index = () => {
     setLoadingSmartphones(true);
     setError(null);
     try {
-      const response = await fetch("https://bertini-backend.vercel.app/api/smartphones");
+      const response = await fetch("https://bertini-backend.vercel.app/api/smartphones", {
+        method: "GET",
+      });
       const data = await response.json();
 
       if (data?.docs && Array.isArray(data.docs)) {
@@ -182,7 +186,9 @@ const Index = () => {
     setLoadingBertinySpecial(true);
     setError(null);
     try {
-      const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page");
+      const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page", {
+        method: "GET",
+      });
       const data = await response.json();
 
       if (data?.docs && Array.isArray(data.docs)) {
@@ -289,8 +295,8 @@ const Index = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <motion.img
-                  src={bertinySpecial[0]?.images?.[0].url 
-                    ? `https://bertini-backend.vercel.app${bertinySpecial[0].images[0].url}` 
+                  src={bertinySpecial[0]?.images?.[0].url
+                    ? `https://bertini-backend.vercel.app${bertinySpecial[0].images[0].url}`
                     : "https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"}
                   alt={bertinySpecial[0]?.name || "Bertiny3.0"}
                   className="rounded-2xl shadow-xl w-full h-auto"

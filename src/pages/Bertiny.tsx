@@ -61,7 +61,9 @@ const Bertiny = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page");
+        const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page", {
+          method: "GET",
+        });
         const data = await response.json();
 
         if (data?.docs && Array.isArray(data.docs) && data.docs.length > 0) {
