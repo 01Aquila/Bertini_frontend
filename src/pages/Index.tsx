@@ -140,7 +140,7 @@ const Index = () => {
         method: "GET",
       });
       const data = await response.json();
-      console.log("Applications data:", data);
+      console.log("Applications data:", data.docs);
 
       if (data?.docs && Array.isArray(data.docs)) {
         setApplications(data.docs.slice(0, 2)); // Only get 2 applications
@@ -166,7 +166,7 @@ const Index = () => {
         method: "GET",
       });
       const data = await response.json();
-      console.log("Smartphones data:", data);
+      console.log("Smartphones data:", data.docs);
 
       if (data?.docs && Array.isArray(data.docs)) {
         setSmartphones(data.docs.slice(0, 2)); // Only get 2 smartphones
@@ -192,7 +192,7 @@ const Index = () => {
         method: "GET",
       });
       const data = await response.json();
-      console.log("Bertiny Special data:", data);
+      console.log("Bertiny Special data:", data.docs);
 
       if (data?.docs && Array.isArray(data.docs)) {
         setBertinySpecial(data.docs.slice(0, 1)); // Only get 1 Bertiny Special
@@ -263,7 +263,7 @@ const Index = () => {
                     ? `${product.description.slice(0, 20)}${product.description.length > 20 ? "..." : ""}`
                     : "Aucune description disponible"
                 }
-                imageUrl={`https://bertini-backend.vercel.app${product?.image?.url}`}
+                imageUrl={product?.image?.url ? `https://bertini-backend.vercel.app${product?.image?.url}` : '/images/placeholder.png'}
                 index={index}
               />
             ))
