@@ -37,78 +37,24 @@ const fallbackProducts = {
   applications: [
     {
       _id: "app1",
-      name: "Filmora Premium",
+      name: "Produit initial",
       price: "5 000",
-      description: "Application de divertissement premium offrant une expérience utilisateur exceptionnelle.",
+      description: "Produit initial de la startup conception 3.0.",
       image: {
         url: "/images/applications/filmora.jpg"
       }
     },
-    {
-      _id: "app2",
-      name: "Capcut",
-      price: "5 000",
-      description: "Application innovante pour la productivité et la gestion de projet.",
-      image: {
-        url: "/images/applications/capcut.jpg"
-      }
-    },
-    {
-      _id: "app3",
-      name: "Netflix",
-      price: "5 000",
-      description: "Service de streaming vidéo premium.",
-      image: {
-        url: "/images/applications/netflix.jpg"
-      }
-    },
-    {
-      _id: "app4",
-      name: "ChatGPT",
-      price: "5 000",
-      description: "Outil de conversation basé sur l'IA.",
-      image: {
-        url: "/images/applications/chatgpt.jpg"
-      }
-    }
   ],
   smartphones: [
     {
-      _id: "phone1",
-      name: "Itel S23",
-      price: "125 000",
+      _id: "sm1",
+      name: "Produit initial",
+      price: "000",
       description: "Smartphone élégant avec écran HD, processeur octa-core et batterie longue durée.",
       image: {
         url: "/images/smartphones/itel-s23.jpg"
       }
     },
-    {
-      _id: "phone2",
-      name: "Infinix Note 12 Pro",
-      price: "150 000",
-      description: "Smartphone puissant avec écran AMOLED, appareil photo haute résolution et charge rapide.",
-      image: {
-        url: "/images/smartphones/infinix-note-12.jpg"
-      }
-    },
-    {
-      _id: "phone3",
-      name: "Samsung Galaxy A33 5G",
-      price: "200 000",
-      description: "Smartphone milieu de gamme avec connectivité 5G, écran Super AMOLED et résistance à l'eau.",
-      image: {
-        url: "/images/smartphones/galaxy-a33.jpg"
-      }
-    },
-    {
-      _id: "phone4",
-      name: "iPhone 14",
-      price: "650 000",
-      description: "Smartphone haut de gamme avec puce A15 Bionic, caméras avancées et écran Super Retina XDR.",
-      image: {
-        url: "/images/smartphones/iphone-14.jpg"
-      }
-    }
   ]
 };
 
