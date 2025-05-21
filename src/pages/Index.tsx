@@ -298,9 +298,7 @@ const Index = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <motion.img
-                  src={bertinySpecial[0]?.images?.[0].url
-                    ? `https://bertini-backend.vercel.app${bertinySpecial[0].images[0].url}`
-                    : "https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"}
+                  src={`https://bertini-backend.vercel.app${bertinySpecial[0].images[0].url}`}
                   alt={bertinySpecial[0]?.name || "Bertiny3.0"}
                   className="rounded-2xl shadow-xl w-full h-auto"
                   initial={{ opacity: 0, x: -50 }}
