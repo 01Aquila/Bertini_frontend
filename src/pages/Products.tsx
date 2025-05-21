@@ -49,8 +49,8 @@ const fallbackProducts = {
     {
       _id: "sm1",
       name: "Produit initial",
-      price: "000",
-      description: "Smartphone élégant avec écran HD, processeur octa-core et batterie longue durée.",
+      price: "0",
+      description: "Produit initial de la startup conception 3.0.",
       image: {
         url: "/images/smartphones/itel-s23.jpg"
       }
