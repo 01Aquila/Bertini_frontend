@@ -7,6 +7,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "axios";
 
 // Define the types for our products and pagination response
 interface Product {
@@ -78,16 +79,13 @@ const Products = () => {
     setLoadingApplications(true);
     setApplicationsError(null);
     try {
-      const response = await fetch(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`, {
-        method: "GET",
-      });
-      const data: PaginationResponse = await response.json();
+      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`);
 
-      if (data?.docs && Array.isArray(data.docs)) {
-        setApplications(data.docs);
-        setApplicationsPagination(data);
+      if (response.data?.docs && Array.isArray(response.data.docs)) {
+        setApplications(response.data.docs);
+        setApplicationsPagination(response.data);
       } else {
-        console.error("Invalid applications data format", data);
+        console.error("Invalid applications data format", response.data);
         setApplications(fallbackProducts.applications);
         setApplicationsError("Erreur lors du chargement des applications");
       }
@@ -105,16 +103,13 @@ const Products = () => {
     setLoadingSmartphones(true);
     setSmartphonesError(null);
     try {
-      const response = await fetch(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`, {
-        method: "GET",
-      });
-      const data: PaginationResponse = await response.json();
+      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`);
 
-      if (data?.docs && Array.isArray(data.docs)) {
-        setSmartphones(data.docs);
-        setSmartphonesPagination(data);
+      if (response.data?.docs && Array.isArray(response.data.docs)) {
+        setSmartphones(response.data.docs);
+        setSmartphonesPagination(response.data);
       } else {
-        console.error("Invalid smartphones data format", data);
+        console.error("Invalid smartphones data format", response.data);
         setSmartphones(fallbackProducts.smartphones);
         setSmartphonesError("Erreur lors du chargement des smartphones");
       }

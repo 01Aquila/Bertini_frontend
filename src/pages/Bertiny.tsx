@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 // Define interface for Bertiny page data
 interface BertinyPageData {
@@ -61,13 +62,11 @@ const Bertiny = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("https://bertini-backend.vercel.app/api/bertini-page", {
-          method: "GET",
-        });
-        const data = await response.json();
+        const response = await axios.get<BertinyPageData[]>("https://bertini-backend.vercel.app/api/bertini-page");
+        const data = response.data;
 
-        if (data?.docs && Array.isArray(data.docs) && data.docs.length > 0) {
-          setBertinyData(data.docs[0]);
+        if (data && Array.isArray(data) && data.length > 0) {
+          setBertinyData(data[0]);
         } else {
           console.error("Invalid bertini-page data format", data);
           setBertinyData(fallbackData);
