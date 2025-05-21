@@ -46,7 +46,7 @@ const fallbackProducts: {
       price: "5 000",
       description: "Application de divertissement premium offrant une expérience utilisateur exceptionnelle.",
       image: {
-        url: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2940&auto=format&fit=crop"
+        url: null
       }
     },
     {
@@ -55,7 +55,7 @@ const fallbackProducts: {
       price: "5 000",
       description: "Application innovante pour la productivité et la gestion de projet.",
       image: {
-        url: "https://images.unsplash.com/photo-1626544827763-d516dce335e2?q=80&w=2787&auto=format&fit=crop"
+        url: null
       }
     }
   ],
@@ -66,7 +66,7 @@ const fallbackProducts: {
       price: "750 000",
       description: "Smartphone haut de gamme avec des fonctionnalités avancées.",
       image: {
-        url: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=2149&auto=format&fit=crop"
+        url: null
       }
     },
     {
@@ -75,7 +75,7 @@ const fallbackProducts: {
       price: "650 000",
       description: "Smartphone Android premium avec un stylet et un appareil photo de qualité professionnelle.",
       image: {
-        url: "https://images.unsplash.com/photo-1677442135136-760c813170a5?q=80&w=2932&auto=format&fit=crop"
+        url: null
       }
     }
   ]
@@ -140,6 +140,7 @@ const Index = () => {
         method: "GET",
       });
       const data = await response.json();
+      console.log("Applications data:", data);
 
       if (data?.docs && Array.isArray(data.docs)) {
         setApplications(data.docs.slice(0, 2)); // Only get 2 applications
@@ -165,6 +166,7 @@ const Index = () => {
         method: "GET",
       });
       const data = await response.json();
+      console.log("Smartphones data:", data);
 
       if (data?.docs && Array.isArray(data.docs)) {
         setSmartphones(data.docs.slice(0, 2)); // Only get 2 smartphones
@@ -190,6 +192,7 @@ const Index = () => {
         method: "GET",
       });
       const data = await response.json();
+      console.log("Bertiny Special data:", data);
 
       if (data?.docs && Array.isArray(data.docs)) {
         setBertinySpecial(data.docs.slice(0, 1)); // Only get 1 Bertiny Special
