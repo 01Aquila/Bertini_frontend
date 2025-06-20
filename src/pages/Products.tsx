@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
@@ -7,7 +6,9 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import axios from "axios";
+import PageLoading from "@/components/PageLoading";
+import { useProductsPage } from "@/hooks/useGlobal";
+import { useApplications, useSmartphones } from "@/hooks/useCollection";
 
 // Define the types for our products and pagination response
 interface Product {
@@ -31,6 +32,21 @@ interface PaginationResponse {
   hasNextPage: boolean;
   prevPage: number | null;
   nextPage: number | null;
+}
+
+// Define type for Products Page Global Data
+interface ProductsPageData {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroImage: { url: string };
+  introTitle: string;
+  introDescription: string;
+  featuredTitle: string;
+  featuredSubtitle: string;
+  ctaTitle: string;
+  ctaText: string;
+  ctaButtonText: string;
+  ctaImage: { url: string };
 }
 
 // Fallback products in case API fails
@@ -60,97 +76,35 @@ const fallbackProducts = {
 };
 
 const Products = () => {
-  // States for applications
-  const [applications, setApplications] = useState<Product[]>([]);
-  const [loadingApplications, setLoadingApplications] = useState(true);
-  const [applicationsPage, setApplicationsPage] = useState(1);
-  const [applicationsPagination, setApplicationsPagination] = useState<PaginationResponse | null>(null);
-  const [applicationsError, setApplicationsError] = useState<string | null>(null);
+  // Global data state
+  const { data: pageData, loading: pageLoading } = useProductsPage();
+  const [productsData, setProductsData] = useState<ProductsPageData | null>(null);
 
-  // States for smartphones
-  const [smartphones, setSmartphones] = useState<Product[]>([]);
-  const [loadingSmartphones, setLoadingSmartphones] = useState(true);
-  const [smartphonesPage, setSmartphonesPage] = useState(1);
-  const [smartphonesPagination, setSmartphonesPagination] = useState<PaginationResponse | null>(null);
-  const [smartphonesError, setSmartphonesError] = useState<string | null>(null);
+  // Use our custom hooks with caching for applications and smartphones
+  const {
+    data: applications,
+    loading: loadingApplications,
+    error: applicationsError,
+    pagination: applicationsPagination,
+    page: applicationsPage,
+    goToPage: handleApplicationsPageChange
+  } = useApplications();
 
-  // Fetch applications with pagination
-  const fetchApplications = async (page = 1) => {
-    setLoadingApplications(true);
-    setApplicationsError(null);
-    try {
-      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/applications?page=${page}&limit=8`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  const {
+    data: smartphones,
+    loading: loadingSmartphones,
+    error: smartphonesError,
+    pagination: smartphonesPagination,
+    page: smartphonesPage,
+    goToPage: handleSmartphonesPageChange
+  } = useSmartphones();
 
-      if (response.data?.docs && Array.isArray(response.data.docs)) {
-        setApplications(response.data.docs);
-        setApplicationsPagination(response.data);
-      } else {
-        console.error("Invalid applications data format", response.data);
-        setApplications(fallbackProducts.applications);
-        setApplicationsError("Erreur lors du chargement des applications");
-      }
-    } catch (error) {
-      console.error("Applications fetch error:", error);
-      setApplications(fallbackProducts.applications);
-      setApplicationsError("Erreur de connexion au serveur");
-    } finally {
-      setLoadingApplications(false);
-    }
-  };
-
-  // Fetch smartphones with pagination
-  const fetchSmartphones = async (page = 1) => {
-    setLoadingSmartphones(true);
-    setSmartphonesError(null);
-    try {
-      const response = await axios.get<PaginationResponse>(`https://bertini-backend.vercel.app/api/smartphones?page=${page}&limit=6`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.data?.docs && Array.isArray(response.data.docs)) {
-        setSmartphones(response.data.docs);
-        setSmartphonesPagination(response.data);
-      } else {
-        console.error("Invalid smartphones data format", response.data);
-        setSmartphones(fallbackProducts.smartphones);
-        setSmartphonesError("Erreur lors du chargement des smartphones");
-      }
-    } catch (error) {
-      console.error("Smartphones fetch error:", error);
-      setSmartphones(fallbackProducts.smartphones);
-      setSmartphonesError("Erreur de connexion au serveur");
-    } finally {
-      setLoadingSmartphones(false);
-    }
-  };
-
-  // Handle application pagination navigation
-  const handleApplicationsPageChange = (newPage: number) => {
-    if (newPage > 0 && (!applicationsPagination || newPage <= applicationsPagination.totalPages)) {
-      setApplicationsPage(newPage);
-      fetchApplications(newPage);
-    }
-  };
-
-  // Handle smartphone pagination navigation
-  const handleSmartphonesPageChange = (newPage: number) => {
-    if (newPage > 0 && (!smartphonesPagination || newPage <= smartphonesPagination.totalPages)) {
-      setSmartphonesPage(newPage);
-      fetchSmartphones(newPage);
-    }
-  };
-
-  // Fetch data on component mount
+  // Set global page data when loaded
   useEffect(() => {
-    fetchApplications();
-    fetchSmartphones();
-  }, []);
+    if (pageData) {
+      setProductsData(pageData);
+    }
+  }, [pageData]);
 
   // Render pagination controls
   const renderPagination = (page: number, totalPages: number, hasPrevPage: boolean, hasNextPage: boolean, onPageChange: (page: number) => void) => {
@@ -179,15 +133,19 @@ const Products = () => {
     );
   };
 
+  if (pageLoading) {
+    return <PageLoading />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
       {/* Hero Section */}
       <Hero
-        title="Notre catalogue de produits"
-        subtitle="Découvrez notre sélection de smartphones et applications"
-        imageUrl="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=2940&auto=format&fit=crop"
+        title={productsData?.heroTitle || "Notre catalogue de produits"}
+        subtitle={productsData?.heroSubtitle || "Découvrez notre sélection de smartphones et applications"}
+        imageUrl={productsData?.heroImage?.url || "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=2940&auto=format&fit=crop"}
         ctaText="Contactez-nous"
         ctaLink="/contact"
       />
@@ -195,126 +153,140 @@ const Products = () => {
       {/* Applications Section */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <SectionTitle
-          title="Nos applications"
-          subtitle="Solutions logicielles pour améliorer votre quotidien"
+          title={productsData?.introTitle || "Nos applications"}
+          subtitle={productsData?.introDescription || "Solutions logicielles pour améliorer votre quotidien"}
         />
 
-        {/* {applicationsError && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6 text-center">
-            {applicationsError}
-          </div>
-        )} */}
-
-        {loadingApplications ? (
-          // Loading state - show placeholder cards
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            {Array(8).fill(0).map((_, index) => (
-              <div key={`loading-app-${index}`} className="bg-white rounded-lg overflow-hidden shadow-md">
-                <div className="h-48 w-full bg-gray-200 animate-pulse" />
-                <div className="p-5">
-                  <div className="h-6 bg-gray-200 rounded w-3/4 mb-2 animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded w-1/4 mb-3 animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded w-full mb-2 animate-pulse" />
-                  <div className="h-10 bg-gray-200 rounded w-full mt-4 animate-pulse" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-              {applications.length > 0 ? applications.map((app, index) => (
-                <ProductCard
-                  key={app._id || index}
-                  _id={app._id}
-                  productType="application"
-                  name={app.name || "Application sans nom"}
-                  price={app.price?.toString() || "Prix non disponible"}
-                  description={app.description || "Aucune description disponible"}
-                  imageUrl={app.image?.url ? `https://bertini-backend.vercel.app${app.image.url}` : "https://images.unsplash.com/photo-1586892478025-2b5472316991?q=80&w=1974&auto=format&fit=crop"}
-                  index={index}
-                />
-              )) : (
-                <div className="col-span-full text-center py-12 text-gray-500">
-                  Aucune application disponible pour le moment.
-                </div>
-              )}
+        <div className="mt-12">
+          {applicationsError && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 text-center">
+              {applicationsError.message || "Erreur lors du chargement des applications"}
             </div>
+          )}
 
-            {applicationsPagination && applicationsPagination.totalPages > 1 && (
-              renderPagination(
-                applicationsPage,
-                applicationsPagination.totalPages,
-                applicationsPagination.hasPrevPage,
-                applicationsPagination.hasNextPage,
-                handleApplicationsPageChange
-              )
-            )}
-          </>
-        )}
-      </section>
-
-      {/* Smartphones Section */}
-      <section className="py-16 bg-startup-blue/5 px-4">
-        <div className="max-w-7xl mx-auto">
-          <SectionTitle
-            title="Nos smartphones"
-            subtitle="Une large gamme pour tous les budgets et besoins"
-          />
-
-          {/* {smartphonesError && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6 text-center">
-              {smartphonesError}
-            </div>
-          )} */}
-
-          {loadingSmartphones ? (
-            // Loading state - show placeholder cards
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-              {Array(6).fill(0).map((_, index) => (
-                <div key={`loading-phone-${index}`} className="bg-white rounded-lg overflow-hidden shadow-md">
-                  <div className="h-48 w-full bg-gray-200 animate-pulse" />
-                  <div className="p-5">
-                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-2 animate-pulse" />
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-3 animate-pulse" />
-                    <div className="h-4 bg-gray-200 rounded w-full mb-2 animate-pulse" />
-                    <div className="h-10 bg-gray-200 rounded w-full mt-4 animate-pulse" />
+          {loadingApplications ? (
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, index) => (
+                <div key={index} className="animate-pulse bg-white rounded-lg overflow-hidden shadow-md h-80">
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-4">
+                    <div className="h-5 bg-gray-200 rounded mb-3 w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-4 w-2/4"></div>
+                    <div className="h-10 bg-gray-200 rounded w-full"></div>
                   </div>
                 </div>
               ))}
             </div>
-          ) : (
+          ) : applications.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-                {smartphones.length > 0 ? smartphones.map((phone, index) => (
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {applications.map((application) => (
                   <ProductCard
-                    key={phone._id || index}
-                    _id={phone._id}
-                    productType="smartphone"
-                    name={phone.name || "Smartphone sans nom"}
-                    price={phone.price?.toString() || "Prix non disponible"}
-                    description={phone.description || "Aucune description disponible"}
-                    imageUrl={phone.image?.url ? `https://bertini-backend.vercel.app${phone.image.url}` : "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=2944&auto=format&fit=crop"}
-                    index={index}
+                    key={application._id}
+                    product={application}
+                    isApplication={true}
                   />
-                )) : (
-                  <div className="col-span-full text-center py-12 text-gray-500">
-                    Aucun smartphone disponible pour le moment.
-                  </div>
-                )}
+                ))}
               </div>
-
-              {smartphonesPagination && smartphonesPagination.totalPages > 1 && (
+              {applicationsPagination && applicationsPagination.totalPages > 1 && (
                 renderPagination(
-                  smartphonesPage,
-                  smartphonesPagination.totalPages,
-                  smartphonesPagination.hasPrevPage,
-                  smartphonesPagination.hasNextPage,
-                  handleSmartphonesPageChange
+                  applicationsPagination.page,
+                  applicationsPagination.totalPages,
+                  applicationsPagination.hasPrevPage,
+                  applicationsPagination.hasNextPage,
+                  handleApplicationsPageChange
                 )
               )}
             </>
+          ) : (
+            <div className="text-center text-gray-500 py-10">
+              Aucune application n'est disponible pour le moment.
+            </div>
           )}
+        </div>
+      </section>
+
+      {/* Smartphones Section */}
+      <section className="py-16 px-4 bg-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <SectionTitle
+            title={productsData?.featuredTitle || "Nos smartphones"}
+            subtitle={productsData?.featuredSubtitle || "Téléphones de qualité à prix compétitifs"}
+          />
+
+          <div className="mt-12">
+            {smartphonesError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 text-center">
+                {smartphonesError.message || "Erreur lors du chargement des smartphones"}
+              </div>
+            )}
+
+            {loadingSmartphones ? (
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="animate-pulse bg-white rounded-lg overflow-hidden shadow-md h-80">
+                    <div className="h-48 bg-gray-200"></div>
+                    <div className="p-4">
+                      <div className="h-5 bg-gray-200 rounded mb-3 w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded mb-4 w-2/4"></div>
+                      <div className="h-10 bg-gray-200 rounded w-full"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : smartphones.length > 0 ? (
+              <>
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  {smartphones.map((smartphone) => (
+                    <ProductCard
+                      key={smartphone._id}
+                      product={smartphone}
+                      isApplication={false}
+                    />
+                  ))}
+                </div>
+                {smartphonesPagination && smartphonesPagination.totalPages > 1 && (
+                  renderPagination(
+                    smartphonesPagination.page,
+                    smartphonesPagination.totalPages,
+                    smartphonesPagination.hasPrevPage,
+                    smartphonesPagination.hasNextPage,
+                    handleSmartphonesPageChange
+                  )
+                )}
+              </>
+            ) : (
+              <div className="text-center text-gray-500 py-10">
+                Aucun smartphone n'est disponible pour le moment.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to action */}
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-startup-blue rounded-xl overflow-hidden shadow-xl">
+            <div className="flex flex-col md:flex-row md:items-center">
+              <div className="md:w-1/2 p-8 md:p-12">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">{productsData?.ctaTitle || "Vous ne trouvez pas ce que vous cherchez ?"}</h2>
+                <p className="text-white/90 mb-6">
+                  {productsData?.ctaText || "N'hésitez pas à nous contacter pour toute demande spécifique. Notre équipe est à votre disposition pour répondre à vos besoins."}
+                </p>
+                <Button asChild className="bg-white text-startup-blue hover:bg-gray-100">
+                  <a href="/contact">{productsData?.ctaButtonText || "Nous contacter"}</a>
+                </Button>
+              </div>
+              <div className="md:w-1/2">
+                <img
+                  src={productsData?.ctaImage?.url || "https://images.unsplash.com/photo-1596524430615-b46475ddff6e?q=80&w=2940&auto=format&fit=crop"}
+                  alt="Contact us"
+                  className="w-full h-64 md:h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

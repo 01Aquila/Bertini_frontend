@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
@@ -9,9 +8,11 @@ import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useBertinyPage } from "@/hooks/useGlobal";
+import PageLoading from "@/components/PageLoading";
 
-// Define interface for Bertiny page data
-interface BertinyPageData {
+// Define interface for Bertiny page data from Collection
+interface BertinyPageCollection {
   id?: string;
   title?: string;
   subtitle?: string;
@@ -31,8 +32,41 @@ interface BertinyPageData {
   updatedAt?: string;
 }
 
+// Define interface for Bertiny page global data
+interface BertinyGlobalData {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroImage: { url: string };
+  productTitle: string;
+  productDescription: string;
+  productImage: { url: string };
+  featuresTitle: string;
+  featuresSubtitle: string;
+  features: {
+    featureTitle: string;
+    featureDescription: string;
+    featureIcon: string;
+  }[];
+  specsTitle: string;
+  specsSubtitle: string;
+  specifications: {
+    specName: string;
+    specValue: string;
+  }[];
+  pricingTitle: string;
+  price: string;
+  priceDescription: string;
+  buyButtonText: string;
+  faqTitle: string;
+  faqSubtitle: string;
+  faqItems: {
+    question: string;
+    answer: string;
+  }[];
+}
+
 // Define fallback data to use if API fails
-const fallbackData: BertinyPageData = {
+const fallbackData: BertinyPageCollection = {
   id: "fallback",
   title: "Machine automatique de distribution de boissons",
   subtitle: "Une solution innovante pour vos besoins de rafraîchissement",
@@ -53,12 +87,16 @@ const fallbackData: BertinyPageData = {
 };
 
 const Bertiny = () => {
-  // State for loading, data, and error handling
+  // State for loading, data, and error handling for Collection data
   const [loading, setLoading] = useState(true);
-  const [bertinyData, setBertinyData] = useState<BertinyPageData | null>(null);
+  const [bertinyData, setBertinyData] = useState<BertinyPageCollection | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch Bertiny page data
+  // State for Global data
+  const { data: globalData, loading: globalLoading } = useBertinyPage();
+  const [bertinyGlobalData, setBertinyGlobalData] = useState<BertinyGlobalData | null>(null);
+
+  // Fetch Bertiny page collection data
   useEffect(() => {
     const fetchBertinyData = async () => {
       setLoading(true);
@@ -70,7 +108,6 @@ const Bertiny = () => {
           },
         });
         const data = response.data;
-        console.log("Bertiny data:", data);
 
         if (data?.docs && Array.isArray(data.docs) && data.docs.length > 0) {
           setBertinyData(data.docs[0]);
@@ -90,253 +127,316 @@ const Bertiny = () => {
 
     fetchBertinyData();
   }, []);
+
+  // Set global data when loaded
+  useEffect(() => {
+    if (globalData) {
+      setBertinyGlobalData(globalData);
+    }
+  }, [globalData]);
+
+  if (loading || globalLoading) {
+    return <PageLoading />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
       {/* Hero Section */}
       <Hero
-        title="Bertiny3.0"
-        subtitle={bertinyData?.subtitle || "La fraîcheur à portée de main"}
-        imageUrl="https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"
+        title={bertinyGlobalData?.heroTitle || "Bertiny3.0"}
+        subtitle={bertinyGlobalData?.heroSubtitle || bertinyData?.subtitle || "La fraîcheur à portée de main"}
+        imageUrl={bertinyGlobalData?.heroImage?.url || "https://images.unsplash.com/photo-1527490087278-9c75be0b8052?q=80&w=2946&auto=format&fit=crop"}
         ctaText="Nous contacter"
         ctaLink="/contact"
       />
 
       {/* Product Description */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
-        {/* {error && (
+        {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-8 text-center">
             {error}
           </div>
-        )} */}
+        )}
 
-        {loading ? (
-          // Loading state with skeleton UI
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="rounded-xl overflow-hidden shadow-xl bg-gray-200 animate-pulse h-64 md:h-80"></div>
-
-            <div>
-              <div className="h-10 bg-gray-200 rounded w-4/5 mb-4 animate-pulse"></div>
-              <div className="h-6 bg-gray-200 rounded w-3/5 mb-8 animate-pulse"></div>
-
-              <div className="h-24 bg-gray-200 rounded w-full mb-8 animate-pulse"></div>
-
-              <div className="mb-8">
-                <div className="h-5 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
-                <div className="h-8 bg-gray-200 rounded w-2/5 animate-pulse"></div>
-              </div>
-
-              <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse"></div>
-            </div>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="rounded-xl overflow-hidden shadow-xl"
-            >
-              <img
-                src={bertinyData?.images?.[0]?.image?.url
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="rounded-xl overflow-hidden shadow-xl"
+          >
+            <img
+              src={
+                bertinyGlobalData?.productImage?.url ||
+                (bertinyData?.images?.[0]?.image?.url
                   ? `https://bertini-backend.vercel.app${bertinyData.images[0].image.url}`
-                  : "https://images.unsplash.com/photo-1592547097938-7942b22df3db?q=80&w=2816&auto=format&fit=crop"}
-                alt={bertinyData?.images?.[0]?.image?.alt || "Bertiny3.0 Machine"}
-                className="w-full h-full object-cover"
-              />
+                  : "https://images.unsplash.com/photo-1592547097938-7942b22df3db?q=80&w=2816&auto=format&fit=crop")
+              }
+              alt={bertinyGlobalData?.productTitle || bertinyData?.title || "Bertiny3.0 Machine"}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+
+          <div>
+            <SectionTitle
+              title={bertinyGlobalData?.productTitle || bertinyData?.title || "Machine automatique de distribution de boissons"}
+              subtitle={bertinyGlobalData?.heroSubtitle || bertinyData?.subtitle || "Une solution innovante pour vos besoins de rafraîchissement"}
+            />
+
+            <motion.p
+              className="text-gray-600 mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              {bertinyGlobalData?.productDescription || bertinyData?.description || "Bertiny3.0 est une machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Elle offre une distribution rapide, hygiénique et autonome de vos boissons préférées."}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="mb-8"
+            >
+              <p className="font-semibold mb-2 text-startup-blue">Prix estimé:</p>
+              <p className="text-2xl font-bold text-gray-900">{bertinyGlobalData?.price || bertinyData?.price || "200 000 FCFA - 250 000 FCFA"}</p>
             </motion.div>
 
-            <div>
-              <SectionTitle
-                title={bertinyData?.title || "Machine automatique de distribution de boissons"}
-                subtitle={bertinyData?.subtitle || "Une solution innovante pour vos besoins de rafraîchissement"}
-              />
-
-              <motion.p
-                className="text-gray-600 mb-6"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                {bertinyData?.description || "Bertiny3.0 est une machine automatique de distribution de boissons fonctionnant avec des pièces de monnaie. Elle offre une distribution rapide, hygiénique et autonome de vos boissons préférées."}
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                viewport={{ once: true }}
-                className="mb-8"
-              >
-                <p className="font-semibold mb-2 text-startup-blue">Prix estimé:</p>
-                <p className="text-2xl font-bold text-gray-900">{bertinyData?.price || "200 000 FCFA - 250 000 FCFA"}</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <Button asChild className="bg-startup-blue hover:bg-startup-blue/90">
-                  <Link to="/contact">
-                    Demander un devis
-                  </Link>
-                </Button>
-              </motion.div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Button asChild className="bg-startup-blue hover:bg-startup-blue/90">
+                <Link to="/contact">
+                  {bertinyGlobalData?.buyButtonText || "Demander un devis"}
+                </Link>
+              </Button>
+            </motion.div>
           </div>
-        )}
+        </div>
       </section>
 
       {/* Features */}
       <section className="py-16 bg-startup-blue/5 px-4">
         <div className="max-w-7xl mx-auto">
           <SectionTitle
-            title="Fonctionnalités clés"
-            subtitle="Ce qui rend Bertiny3.0 unique"
+            title={bertinyGlobalData?.featuresTitle || "Fonctionnalités clés"}
+            subtitle={bertinyGlobalData?.featuresSubtitle || "Ce qui rend Bertiny3.0 unique"}
             center
           />
 
-          <div className="grid md:grid-cols-2 gap-8 mt-12">
-            <motion.div
-              className="bg-white p-6 rounded-xl shadow-md"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Acceptation de pièces</h3>
-              <ul className="space-y-3">
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Pièces de 50 FCFA</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Pièces de 100 FCFA</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Pièces de 200 FCFA</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Pièces de 500 FCFA</span>
-                </li>
-              </ul>
-            </motion.div>
+          <div className="grid md:grid-cols-3 gap-8 mt-12">
+            {bertinyGlobalData?.features ? (
+              // Use features from global data if available
+              bertinyGlobalData.features.map((feature, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white p-6 rounded-xl shadow-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="bg-startup-blue/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Check className="text-startup-blue" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">{feature.featureTitle}</h3>
+                  <p className="text-gray-600">{feature.featureDescription}</p>
+                </motion.div>
+              ))
+            ) : (
+              // Default features
+              <>
+                <motion.div
+                  className="bg-white p-6 rounded-xl shadow-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="bg-startup-blue/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Check className="text-startup-blue" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Paiement par pièces</h3>
+                  <p className="text-gray-600">Accepte les pièces de monnaie standard pour faciliter l'achat de boissons sans surveillance.</p>
+                </motion.div>
 
-            <motion.div
-              className="bg-white p-6 rounded-xl shadow-md"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Avantages</h3>
-              <ul className="space-y-3">
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Pratique et accessible</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Distribution rapide</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Système hygiénique</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="mr-2 h-5 w-5 text-startup-blue" />
-                  <span>Fonctionnement autonome</span>
-                </li>
-              </ul>
-            </motion.div>
+                <motion.div
+                  className="bg-white p-6 rounded-xl shadow-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="bg-startup-blue/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Check className="text-startup-blue" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Distribution automatisée</h3>
+                  <p className="text-gray-600">Système entièrement automatisé pour une distribution rapide et efficace des boissons.</p>
+                </motion.div>
+
+                <motion.div
+                  className="bg-white p-6 rounded-xl shadow-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="bg-startup-blue/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Check className="text-startup-blue" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Maintenance facile</h3>
+                  <p className="text-gray-600">Conception robuste nécessitant peu d'entretien et facile à recharger.</p>
+                </motion.div>
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Technical Specs */}
+      {/* Specifications */}
       <section className="py-16 px-4 max-w-7xl mx-auto">
         <SectionTitle
-          title="Caractéristiques techniques"
-          subtitle="Conçue pour répondre à tous vos besoins"
+          title={bertinyGlobalData?.specsTitle || "Spécifications techniques"}
+          subtitle={bertinyGlobalData?.specsSubtitle || "Détails et caractéristiques"}
           center
         />
 
-        <div className="mt-12 bg-white shadow-md rounded-xl overflow-hidden">
-          <div className="grid md:grid-cols-2">
-            <motion.div
-              className="p-6"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Dimensions</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>Hauteur: 1m à 1,70m</li>
-                <li>Largeur: 30-60 cm</li>
-                <li>Profondeur: 30-60 cm</li>
-              </ul>
-            </motion.div>
-
-            <motion.div
-              className="p-6 border-t md:border-t-0 md:border-l border-gray-200"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Capacité</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>10 à 100 litres selon les commandes</li>
-                <li>Distribution adaptable selon les besoins</li>
-                <li>Système de réfrigération intégré</li>
-              </ul>
-            </motion.div>
+        <div className="mt-12 bg-white rounded-xl shadow-md p-8 max-w-3xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6">
+            {bertinyGlobalData?.specifications ? (
+              // Use specifications from global data if available
+              bertinyGlobalData.specifications.map((spec, index) => (
+                <div key={index} className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">{spec.specName}</p>
+                  <p className="font-medium">{spec.specValue}</p>
+                </div>
+              ))
+            ) : (
+              // Default specifications
+              <>
+                <div className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">Dimensions</p>
+                  <p className="font-medium">60cm x 40cm x 120cm</p>
+                </div>
+                <div className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">Poids</p>
+                  <p className="font-medium">45kg</p>
+                </div>
+                <div className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">Capacité</p>
+                  <p className="font-medium">100-150 boissons</p>
+                </div>
+                <div className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">Alimentation</p>
+                  <p className="font-medium">220V - 50Hz</p>
+                </div>
+                <div className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">Consommation</p>
+                  <p className="font-medium">100W en fonctionnement</p>
+                </div>
+                <div className="border-b border-gray-100 pb-4">
+                  <p className="text-gray-500 text-sm">Température</p>
+                  <p className="font-medium">5°C - 15°C</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-startup-blue to-startup-blue-light text-white">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <motion.h2
-            className="text-3xl md:text-4xl font-bold font-heading mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            Intéressé par Bertiny3.0?
-          </motion.h2>
-          <motion.p
-            className="text-xl text-white/90 mb-8 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            Contactez-nous dès aujourd'hui pour en savoir plus ou pour commander votre machine.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <Button asChild className="bg-white text-startup-blue hover:bg-white/90 text-lg px-8 py-6">
+      {/* FAQ Section */}
+      <section className="py-16 bg-startup-blue/5 px-4">
+        <div className="max-w-7xl mx-auto">
+          <SectionTitle
+            title={bertinyGlobalData?.faqTitle || "Questions fréquentes"}
+            subtitle={bertinyGlobalData?.faqSubtitle || "Tout ce que vous devez savoir sur Bertiny3.0"}
+            center
+          />
+
+          <div className="mt-12 max-w-4xl mx-auto">
+            {bertinyGlobalData?.faqItems ? (
+              // Use FAQ items from global data if available
+              bertinyGlobalData.faqItems.map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white mb-4 rounded-lg shadow-md overflow-hidden"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">{item.question}</h3>
+                    <p className="text-gray-600">{item.answer}</p>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              // Default FAQ items
+              <>
+                <motion.div
+                  className="bg-white mb-4 rounded-lg shadow-md overflow-hidden"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Comment fonctionne Bertiny3.0?</h3>
+                    <p className="text-gray-600">
+                      Bertiny3.0 accepte des pièces de monnaie, puis distribue automatiquement la boisson sélectionnée. Il suffit d'insérer l'argent, de faire votre sélection, et la boisson est distribuée.
+                    </p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  className="bg-white mb-4 rounded-lg shadow-md overflow-hidden"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Quels types de boissons peut-on distribuer?</h3>
+                    <p className="text-gray-600">
+                      Bertiny3.0 peut être configuré pour distribuer une variété de boissons embouteillées ou en canette, selon vos besoins spécifiques.
+                    </p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  className="bg-white mb-4 rounded-lg shadow-md overflow-hidden"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Est-ce que Bertiny3.0 nécessite une connexion électrique?</h3>
+                    <p className="text-gray-600">
+                      Oui, Bertiny3.0 nécessite une connexion électrique standard pour fonctionner, notamment pour le système de refroidissement et le mécanisme de distribution.
+                    </p>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button asChild className="bg-startup-blue hover:bg-startup-blue/90">
               <Link to="/contact">
-                Nous contacter
+                {bertinyGlobalData?.buyButtonText || "Demander plus d'informations"}
               </Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
 

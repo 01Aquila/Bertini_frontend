@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import { CheckCircle, ThumbsUp, Lock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useHomepage } from "@/hooks/useGlobal";
+import PageLoading from "@/components/PageLoading";
 
 // Define proper types for our products
 interface Product {
@@ -42,6 +44,30 @@ interface BertinySpecial {
   }[];
   createdAt?: string;
   updatedAt?: string;
+}
+
+// Define type for Homepage Global Data
+interface HomepageData {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroCtaText: string;
+  heroImage: { url: string };
+  advantages: {
+    title: string;
+    description: string;
+    iconName: string;
+  }[];
+  aboutTitle: string;
+  aboutParagraph: string;
+  aboutImage: { url: string };
+  aboutCtaText: string;
+  testimonials: {
+    name: string;
+    testimonial: string;
+  }[];
+  ctaTitle: string;
+  ctaSubtitle: string;
+  ctaButtonText: string;
 }
 
 // Fallback products in case API fails
@@ -91,25 +117,34 @@ const fallbackProducts: {
   ]
 };
 
-const advantages = [
+// Icon mapping for advantages section
+const iconMapping = {
+  "CheckCircle": CheckCircle,
+  "ThumbsUp": ThumbsUp,
+  "Lock": Lock,
+};
+
+// Default advantages as fallback
+const defaultAdvantages = [
   {
     title: "Produits locaux",
     description: "Des produits conçus au Cameroun pour le marché local.",
-    icon: CheckCircle
+    iconName: "CheckCircle"
   },
   {
     title: "Service client réactif",
     description: "Une équipe disponible pour répondre à toutes vos questions.",
-    icon: ThumbsUp
+    iconName: "ThumbsUp"
   },
   {
     title: "Paiement sécurisé",
     description: "Vos transactions sont protégées par les dernières technologies de sécurité.",
-    icon: Lock
+    iconName: "Lock"
   }
 ];
 
-const testimonials = [
+// Default testimonials as fallback
+const defaultTestimonials = [
   {
     id: 1,
     name: "Kamdem Éric",
@@ -133,6 +168,10 @@ const testimonials = [
 ];
 
 const Index = () => {
+  // State for Homepage global data
+  const { data: homepageData, loading: homepageLoading } = useHomepage();
+  const [pageData, setPageData] = useState<HomepageData | null>(null);
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const [loadingApplications, setLoadingApplications] = useState(true);
   const [loadingSmartphones, setLoadingSmartphones] = useState(true);
@@ -220,11 +259,29 @@ const Index = () => {
     }
   };
 
+  // Update homepage data when loaded from CMS
+  useEffect(() => {
+    if (homepageData) {
+      setPageData(homepageData);
+    }
+  }, [homepageData]);
+
   useEffect(() => {
     fetchApplications();
     fetchSmartphones();
     fetchBertinySpecial();
   }, []);
+  
+  // Show loading state if homepage data is loading
+  if (homepageLoading) {
+    return <PageLoading />;
+  }
+  
+  // Get advantages to display (from CMS or fallback)
+  const advantagesToShow = pageData?.advantages || defaultAdvantages;
+  
+  // Get testimonials to display (from CMS or fallback)
+  const testimonialsToShow = pageData?.testimonials || defaultTestimonials;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -438,15 +495,19 @@ const Index = () => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          {advantages.map((advantage, index) => (
-            <FeatureCard
-              key={index}
-              title={advantage.title}
-              description={advantage.description}
-              icon={advantage.icon}
-              index={index}
-            />
-          ))}
+                      {advantagesToShow.map((advantage, index) => {
+             const IconComponent = iconMapping[advantage.iconName] || CheckCircle;
+             
+             return (
+              <FeatureCard
+                key={index}
+                title={advantage.title}
+                description={advantage.description}
+                icon={IconComponent}
+                index={index}
+              />
+             );
+           })}
         </div>
       </section>
 
@@ -462,7 +523,7 @@ const Index = () => {
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
               >
-                À propos de nous
+                {pageData?.aboutTitle || "À propos de nous"}
               </motion.h2>
               <motion.p
                 className="text-white/90 mb-6"
@@ -471,16 +532,7 @@ const Index = () => {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 viewport={{ once: true }}
               >
-                Startup Conception 3.0 est une entreprise qui conçoit des solutions innovantes pour améliorer la vie quotidienne, avec des valeurs d'innovation, de qualité et de service client.
-              </motion.p>
-              <motion.p
-                className="text-white/90 mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                Créée en avril 2019, notre mission est de promouvoir l'innovation locale et donner aux jeunes les outils pour être autonomes.
+                {pageData?.aboutParagraph || "Startup Conception 3.0 est une entreprise qui conçoit des solutions innovantes pour améliorer la vie quotidienne, avec des valeurs d'innovation, de qualité et de service client."}
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -488,11 +540,11 @@ const Index = () => {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                <Button asChild className="bg-white text-startup-blue hover:bg-white/90">
-                  <Link to="/about">
-                    En savoir plus
-                  </Link>
-                </Button>
+                                  <Button asChild className="bg-white text-startup-blue hover:bg-white/90">
+                    <Link to="/about">
+                      {pageData?.aboutCtaText || "En savoir plus"}
+                    </Link>
+                  </Button>
               </motion.div>
             </div>
             <motion.div
@@ -503,7 +555,7 @@ const Index = () => {
               viewport={{ once: true }}
             >
               <img
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2940&auto=format&fit=crop"
+                src={pageData?.aboutImage?.url || "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2940&auto=format&fit=crop"}
                 alt="Notre équipe"
                 className="w-full h-full object-cover"
               />
@@ -521,7 +573,7 @@ const Index = () => {
         />
 
         <div className="grid grid-cols-2 gap-6 mt-12 max-w-2xl mx-auto">
-          {testimonials.map((testimonial, index) => (
+          {testimonialsToShow.map((testimonial, index) => (
             <TestimonialCard
               key={index}
               name={testimonial.name}
@@ -542,7 +594,7 @@ const Index = () => {
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            Prêt à découvrir nos services?
+            {pageData?.ctaTitle || "Prêt à découvrir nos services?"}
           </motion.h2>
           <motion.p
             className="text-xl text-white/90 mb-8 max-w-2xl mx-auto"
@@ -551,7 +603,7 @@ const Index = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            Contactez-nous dès aujourd'hui pour en savoir plus sur nos produits et services.
+            {pageData?.ctaSubtitle || "Contactez-nous dès aujourd'hui pour en savoir plus sur nos produits et services."}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -561,7 +613,7 @@ const Index = () => {
           >
             <Button asChild className="bg-white text-startup-blue hover:bg-white/90 text-lg px-8 py-6">
               <Link to="/contact">
-                Nous contacter
+                {pageData?.ctaButtonText || "Nous contacter"}
               </Link>
             </Button>
           </motion.div>

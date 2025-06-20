@@ -1,11 +1,18 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
-export function ContactForm() {
+interface ContactFormProps {
+  submitButtonText?: string;
+  successMessage?: string;
+}
+
+export function ContactForm({ 
+  submitButtonText = "Envoyer le message", 
+  successMessage = "Nous vous contacterons bientôt."
+}: ContactFormProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
@@ -31,7 +38,7 @@ export function ContactForm() {
     setTimeout(() => {
       toast({
         title: "Message envoyé!",
-        description: "Nous vous contacterons bientôt.",
+        description: successMessage,
       });
       setFormData({
         name: "",
@@ -108,7 +115,7 @@ export function ContactForm() {
         className="w-full bg-startup-blue hover:bg-startup-blue/90"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Envoi en cours..." : "Envoyer le message"}
+        {isSubmitting ? "Envoi en cours..." : submitButtonText}
       </Button>
     </form>
   );

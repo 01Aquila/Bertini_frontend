@@ -2,17 +2,56 @@ import { ContactForm } from "@/components/ContactForm";
 import { Navbar } from "@/components/Navbar";
 import { Facebook, Phone, Mail, MapPin, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useContactPage } from "@/hooks/useGlobal";
+import { useEffect, useState } from "react";
+import PageLoading from "@/components/PageLoading";
+
+// Define Contact Page Global Data interface
+interface ContactPageData {
+    heroTitle: string;
+    heroSubtitle: string;
+    heroImage: { url: string };
+    officeTitle: string;
+    officeAddress: string;
+    officeHours: string;
+    phoneNumber: string;
+    emailAddress: string;
+    formTitle: string;
+    formSubtitle: string;
+    formSubmitButtonText: string;
+    formSuccessMessage: string;
+    showMap: boolean;
+    mapTitle: string;
+    mapLatitude: string;
+    mapLongitude: string;
+    mapZoomLevel: number;
+}
 
 export default function Contact() {
+    const { data: pageData, loading } = useContactPage();
+    const [contactData, setContactData] = useState<ContactPageData | null>(null);
+
+    useEffect(() => {
+        if (pageData) {
+            setContactData(pageData);
+        }
+    }, [pageData]);
+
+    if (loading) {
+        return <PageLoading />;
+    }
+
     return (
         <section className="w-full min-h-screen pt-24 pb-12 bg-gradient-to-br from-white via-white to-startup-blue-light">
             <Navbar />
             <div className="max-w-5xl mx-auto px-6">
                 {/* Title and subtitle */}
                 <div className="mb-12 text-center">
-                    <h1 className="text-3xl md:text-4xl font-bold font-heading text-startup-blue mb-2">Contactez-nous</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold font-heading text-startup-blue mb-2">
+                        {contactData?.heroTitle || "Contactez-nous"}
+                    </h1>
                     <p className="text-gray-600 text-lg max-w-xl mx-auto">
-                        Nous sommes impatients de vous lire ! Remplissez le formulaire ou contactez-nous directement.
+                        {contactData?.heroSubtitle || "Nous sommes impatients de vous lire ! Remplissez le formulaire ou contactez-nous directement."}
                     </p>
                 </div>
                 <div className="flex flex-col md:flex-row gap-10 bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-in">
@@ -20,19 +59,21 @@ export default function Contact() {
                     <div className="md:w-2/5 w-full px-8 py-10 bg-gradient-to-b from-startup-blue to-startup-blue-light text-white flex flex-col justify-between">
                         {/* Contact Info */}
                         <div>
-                            <h2 className="text-xl font-semibold mb-5 font-heading">Informations</h2>
+                            <h2 className="text-xl font-semibold mb-5 font-heading">
+                                {contactData?.officeTitle || "Informations"}
+                            </h2>
                             <ul className="space-y-4 text-base">
                                 <li className="flex items-center gap-3">
                                     <Phone className="w-5 h-5 opacity-90" />
-                                    <span>+237 651 172 706</span>
+                                    <span>{contactData?.phoneNumber || "+237 651 172 706"}</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M17 2h-14a1 1 0 0 0 -1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-14a1 1 0 0 0 -1-1zm-1 2-5 4.997-5-4.997zm-12 12v-11.367l5.803 5.794c.291.29.677.435 1.073.435s.782-.145 1.073-.435l5.803-5.794v11.367z" /></svg>
-                                    <span>startupconception3.0@gmail.com</span>
+                                    <span>{contactData?.emailAddress || "startupconception3.0@gmail.com"}</span>
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <MapPin className="w-5 h-5 opacity-90" />
-                                    <span>Yaoundé, Ekounou-Ekie-Concentré</span>
+                                    <span>{contactData?.officeAddress || "Yaoundé, Ekounou-Ekie-Concentré"}</span>
                                 </li>
                             </ul>
                             <div className="mt-8">
@@ -84,8 +125,13 @@ export default function Contact() {
                     </div>
                     {/* Right: Form */}
                     <div className="md:w-3/5 w-full p-8 bg-white flex flex-col justify-center">
-                        <h2 className="text-xl font-bold text-startup-blue mb-4 font-heading">Envoyez-nous un message</h2>
-                        <ContactForm />
+                        <h2 className="text-xl font-bold text-startup-blue mb-4 font-heading">
+                            {contactData?.formTitle || "Envoyez-nous un message"}
+                        </h2>
+                        <ContactForm 
+                            submitButtonText={contactData?.formSubmitButtonText || "Envoyer"}
+                            successMessage={contactData?.formSuccessMessage || "Votre message a été envoyé avec succès."}
+                        />
                     </div>
                 </div>
                 {/* Call to action */}
