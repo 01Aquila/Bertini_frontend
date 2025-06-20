@@ -1,0 +1,24 @@
+{
+  "name": "Startup Conception 3.0",
+  "short_name": "SC3.0",
+  "description": "Une entreprise innovante dédiée à la promotion de l'autonomie des jeunes",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#0F4C81",
+  "background_color": "#ffffff",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+} 
